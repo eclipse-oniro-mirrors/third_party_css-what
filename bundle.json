@@ -18,8 +18,8 @@
         "css",
         "what"
     ],
-    "envs": [],
-    "dirs": [],
+    "envs": {},
+    "dirs": {},
     "segment": {
         "destPath": "third_party/css-what"
     },
