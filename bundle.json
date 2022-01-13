@@ -1,0 +1,40 @@
+{
+    "name": "@ohos/css_what",
+    "version": "",
+    "description": "Third-party open-source software css-what | 三方开源软件css-what",
+    "homePage": "https://gitee.com/openharmony",
+    "license": "BSD 2-Clause V2.1.3",
+    "repository": "https://gitee.com/openharmony/third_party_css-what",
+    "domain": "os",
+    "language": "",
+    "publishAs": "code-segment",
+    "private": false,
+    "scripts": {},
+    "tags": [
+        "third_party"
+    ],
+    "keywords": [
+        "third-party",
+        "css",
+        "what"
+    ],
+    "envs": {},
+    "dirs": {},
+    "segment": {
+        "destPath": "third_party/css-what"
+    },
+    "component": {
+        "name": "thirdparty_css-what",
+        "subsystem": "",
+        "syscap": [],
+        "features": [],
+        "adapted_system_type": [],
+        "rom": "",
+        "ram": "",
+        "build": {
+            "sub_component": [],
+            "inner_kits": [],
+            "test": []
+        }
+    }
+}
