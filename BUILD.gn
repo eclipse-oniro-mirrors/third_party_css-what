@@ -13,8 +13,13 @@
 
 import("//build/ohos.gni")
 
-ohos_copy("css_what_sources") {
-  sources = [ "src" ]
-  outputs = [ target_out_dir + "/../jsframework/runtime" ]
+ohos_prebuilt_etc("css_what_sources") {
+  source = "src"
+  output = "../jsframework/runtime"
   license_file = "LICENSE"
+
+  install_enable = false
+
+  part_name = "css-what"
+  subsystem_name = "thirdparty"
 }
