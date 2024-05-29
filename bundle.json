@@ -28,7 +28,11 @@
         },
         "build": {
             "sub_component": [],
-            "inner_kits": [],
+            "inner_kits": [
+                {
+                    "name": "//third_party/css-what:css_what_sources"
+                }
+            ],
             "test": []
         }
     }
