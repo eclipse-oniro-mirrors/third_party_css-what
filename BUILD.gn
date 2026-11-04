@@ -13,9 +13,19 @@
 
 import("//build/ohos.gni")
 
-ohos_prebuilt_etc("css_what_sources") {
-  source = "src"
-  output = "../jsframework/runtime"
+ohos_copy("css_what_sources") {
+  sources = [
+    "src/index.ts",
+    "src/parse.ts",
+    "src/stringify.ts",
+    "src/types.ts",
+    "src/parse.spec.ts",
+    "src/stringify.spec.ts",
+    "src/wpt.spec.ts",
+    "src/__fixtures__/tests.ts",
+    "src/__fixtures__/out.json",
+  ]
+  outputs = [ "${target_out_dir}/runtime/{{source_target_relative}}" ]
   license_file = "LICENSE"
 
   install_enable = false
