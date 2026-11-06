@@ -13,23 +13,63 @@
 
 import("//build/ohos.gni")
 
-ohos_copy("css_what_sources") {
-  sources = [
-    "src/index.ts",
-    "src/parse.ts",
-    "src/stringify.ts",
-    "src/types.ts",
-    "src/parse.spec.ts",
-    "src/stringify.spec.ts",
-    "src/wpt.spec.ts",
-    "src/__fixtures__/tests.ts",
-    "src/__fixtures__/out.json",
-  ]
-  outputs = [ "${target_out_dir}/runtime/{{source_target_relative}}" ]
+collect_module_target("css_what_sources__collect") {
+  module_label = get_label_info(":css_what_sources", "label_with_toolchain")
+}
+
+collect_notice("css_what_sources__notice") {
+  sources = [ "src" ]
+  source_list = sources
   license_file = "LICENSE"
+  module_name = "css_what_sources"
+  module_source_dir = get_label_info(":css_what_sources", "dir")
+}
 
+generate_module_info("css_what_sources_info") {
+  module_name = "css_what_sources"
+  module_type = "unknown"
+  module_source_dir = "${target_out_dir}"
   install_enable = false
-
+  prebuilt = false
   part_name = "css-what"
   subsystem_name = "thirdparty"
+  module_install_images = [ "system" ]
+  notice = "$target_out_dir/css_what_sources.notice.txt"
+}
+
+action("css_what_sources") {
+  script = "copy_sources.py"
+  outputs = [ "$target_out_dir/runtime/src" ]
+  depfile = "$target_gen_dir/css_what_sources.d"
+  args = [
+    "--source",
+    rebase_path("src", root_build_dir),
+    "--output",
+    rebase_path(outputs[0], root_build_dir),
+    "--depfile",
+    rebase_path(depfile, root_build_dir),
+    "--dep-target",
+    rebase_path(outputs[0], root_build_dir),
+  ]
+  deps = [
+    ":css_what_sources__collect",
+    ":css_what_sources__notice",
+  ]
+  if (!skip_gen_module_info) {
+    deps += [ ":css_what_sources_info" ]
+  }
+  metadata = {
+    install_modules = [
+      {
+        module_def = get_label_info(":css_what_sources", "label_with_toolchain")
+        module_info_file = rebase_path(target_out_dir, root_build_dir) +
+                           "/css_what_sources_module_info.json"
+        subsystem_name = "thirdparty"
+        part_name = "css-what"
+        toolchain = current_toolchain
+        toolchain_out_dir = rebase_path(root_out_dir, root_build_dir)
+        module_type = "unknown"
+      },
+    ]
+  }
 }
