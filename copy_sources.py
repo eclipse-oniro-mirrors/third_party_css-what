@@ -49,6 +49,7 @@ def main():
     parser.add_argument('--source', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--depfile', type=Path, required=True)
+    parser.add_argument('--exported-output', type=Path)
     parser.add_argument('--dep-target', required=True)
     args = parser.parse_args()
     source, output = args.source.absolute(), args.output.absolute()
@@ -70,7 +71,13 @@ def main():
         elif output.exists():
             output.unlink()
         os.replace(staged, output)
-    dependencies.update(path for path in output.rglob('*') if path.is_file())
+    generated_files = [path for path in output.rglob('*') if path.is_file()]
+    dependencies.update(generated_files)
+    if args.exported_output is not None:
+        # A downstream copy owns this public payload. Track its members so a
+        # removed exported file refreshes staging and schedules that copy again.
+        dependencies.update(args.exported_output.absolute()/path.relative_to(output)
+                            for path in generated_files)
     args.depfile.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary = tempfile.mkstemp(dir=args.depfile.parent, prefix='.css-deps-')
     try:

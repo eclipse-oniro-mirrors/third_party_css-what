@@ -37,9 +37,15 @@ generate_module_info("css_what_sources_info") {
   notice = "$target_out_dir/css_what_sources.notice.txt"
 }
 
-action("css_what_sources") {
+# Keep the exported inner API a copy target. Component checks and binary
+# packaging recognize its payload through the original public target label.
+_css_what_staged_sources = "$target_gen_dir/css_what_sources/runtime/src"
+_css_what_exported_sources = "$target_out_dir/runtime/src"
+
+action("css_what_sources_prepare") {
+  visibility = [ ":css_what_sources" ]
   script = "copy_sources.py"
-  outputs = [ "$target_out_dir/runtime/src" ]
+  outputs = [ _css_what_staged_sources ]
   depfile = "$target_gen_dir/css_what_sources.d"
   args = [
     "--source",
@@ -48,12 +54,20 @@ action("css_what_sources") {
     rebase_path(outputs[0], root_build_dir),
     "--depfile",
     rebase_path(depfile, root_build_dir),
+    "--exported-output",
+    rebase_path(_css_what_exported_sources, root_build_dir),
     "--dep-target",
     rebase_path(outputs[0], root_build_dir),
   ]
+}
+
+copy("css_what_sources") {
+  sources = [ _css_what_staged_sources ]
+  outputs = [ _css_what_exported_sources ]
   deps = [
     ":css_what_sources__collect",
     ":css_what_sources__notice",
+    ":css_what_sources_prepare",
   ]
   if (!skip_gen_module_info) {
     deps += [ ":css_what_sources_info" ]
